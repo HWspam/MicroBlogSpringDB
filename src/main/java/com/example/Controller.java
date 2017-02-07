@@ -21,29 +21,42 @@ public class Controller {
     @Autowired
     MessageRepository messsages;
 
-    ArrayList<Message> submitted = new ArrayList<Message>();
+    @Autowired
+    UserRepo users;
+
 
     @RequestMapping(path="/", method = RequestMethod.GET)
     public String person(Model model, HttpSession session) {
         model.addAttribute("name", session.getAttribute("userName"));
-        List<Message> messList = (List<Message>)messsages.findAll();
+        User d = users.findFirstByName((String) session.getAttribute("userName"));
+
+        List<Message> messList = (List<Message>)messsages.findByUser(d);
         model.addAttribute("messages", messList);
         return "person";
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String each (HttpSession session, String user  ) {
+    public String each (HttpSession session, String user) {
         session.setAttribute("userName", user);
+        User a = users.findFirstByName(user);
+        if(a == null) {
+            a = new User(user);
+            users.save(a);
+
+        }
         return "redirect:/";
     }
 
     @RequestMapping(path="/add-message", method = RequestMethod.POST)
     public String sub(String messageText, HttpSession session) {
+        String a = (String) session.getAttribute("userName");
+        User b = users.findFirstByName(a);
 
-        Message mess = new Message (messageText);
+
+        Message mess = new Message (messageText, b);
+        messsages.save(mess);
 
 
-        submitted.add(mess);
 
         return "redirect:/";
 
@@ -55,17 +68,14 @@ public class Controller {
     public String edutmessage(Model model, int Id, String edit) {
         Message message = messsages.findOne(Id);
         message.messageText = edit;
-        submitted.add(message);
-
+        messsages.save(message);
         return "redirect:/";
 
     }
 
     @RequestMapping(path = "/delete-message", method = RequestMethod.POST)
     public String delSub(Model model, int id) {
-        submitted.remove(id);
-
-
+        messsages.delete(id);
         return "redirect:/";
     }
 }

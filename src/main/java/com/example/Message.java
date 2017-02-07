@@ -22,6 +22,14 @@ public class Message {
     @Column(nullable = false)
     String messageText;
 
+    @ManyToOne
+    User user;
+
+    public Message(String messageText, User user) {
+        this.messageText = messageText;
+        this.user = user;
+    }
+
     public Message(int id, String messageText) {
         this.id = id;
         this.messageText = messageText;

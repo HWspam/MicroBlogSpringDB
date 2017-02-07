@@ -8,44 +8,44 @@
 
 {{^name}}
 <form action="/login" method="post">
-    <input type="text" placeholder="Enter name" name="userName"/>
+    <input type="text" placeholder="Enter your name" name="user"/>
     <button type="submit">Login</button>
 </form>
 {{/name}}
 
-<h1>{{#name}} Youre here {{.}}</h1>
+<h1>{{#name}} Hello {{.}}</h1>
 
 <br/><br/>
 
 <form action="/add-message" method="post">
-    <input type="text" placeholder="Write message" name="text">
+    <input type="text" placeholder="Write a message" name="messageText">
     <button type="submit">Submit</button>
 </form>
 
 <br/><br/>
 
-<form action = "/edit-message" method = "post">
-    <input type = "text" placeholder = "Id" name = "enterId"/>
-    <input type = "text" placeholder="Edit" name = "edit"/>
+<form action = "/editmessage" method = "post">
+    <input type = "text" placeholder = "id" name = "enterId"/>
+    <input type = "text" placeholder="Edit message" name = "edit"/>
     <button type="submit">Edit Message</button>
 </form>
 
 <br>
 
 {{#name}}
-<h3>{{.}} Messages...</h3>
+<h3>Messages from {{.}}:</h3>
 {{/name}}
 
 <p>
 <ul>
-    {{#submitted}}
+    {{#messages}}
     <li>{{id}}.  {{messageText}}
         <form action="/delete-message" method="post">
-            <input type="hidden" value="{{id}}" name="Id"/>
+            <input type="hidden" value="{{id}}" name="id"/>
             <button type="submit">Delete</button>
         </form><br>
     </li>
-    {{/submitted}}
+    {{/messages}}
 </ul>
 </p>
 
